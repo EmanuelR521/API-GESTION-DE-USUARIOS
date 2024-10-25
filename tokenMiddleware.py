@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, timezone
 import jwt 
-from config import config
-conf = config()
+from config import Config
+conf = Config()
 
 def generate_token(username):
     try:

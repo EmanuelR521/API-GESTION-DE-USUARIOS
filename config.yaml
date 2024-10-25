@@ -1,2 +1,5 @@
 jwt:
   secret: hola
+mongo:
+  uri: mongodb://localhost:27017/USERMANAGER
+  db: USERMANAGER

@@ -8,24 +8,26 @@ from loginHandler import LoginHandler
 import bcrypt
 from functools import wraps
 import tokenMiddleware
+from config import Config
+
+conf = Config()
 
 
 test = Flask(__name__) 
 
 
-uri = "mongodb://localhost:27017/USERMANAGER"
+uri = conf.uri
 
-test.config['MONGO_URI'] = 'mongodb://localhost:27017/USERMANAGER'
 
-dbname = 'USERMANAGER'
+dbname = conf.db_name
 
-mongoClient = pymongo.MongoClient(test.config['MONGO_URI'])
+mongoClient = pymongo.MongoClient(uri)
 
 def login_required(f):
     
     @wraps(f)
     def decorated(*args, **kwargs):
-        db = pymongo.MongoClient(test.config['MONGO_URI'])["admins"]
+        db = pymongo.MongoClient(uri)["admins"]
         token = request.headers.get('token')
         if not token:
             return jsonify({'message': 'Token is missing!'}), 401
