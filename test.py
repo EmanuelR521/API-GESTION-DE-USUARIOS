@@ -18,7 +18,6 @@ test = Flask(__name__)
 
 uri = conf.uri
 
-
 dbname = conf.db_name
 
 mongoClient = pymongo.MongoClient(uri)
@@ -54,7 +53,7 @@ def login():
     loginHandler = LoginHandler(dbname,uri, mongoClient)
     response = LoginHandler.login(loginHandler,login)
     if response:
-        return json.dumps({'message': response}), 200
+        return json.dumps({'token': response}), 200
     else:
         return json.dumps({'message': 'Login failed :( '}), 500
     
@@ -124,17 +123,18 @@ def updateUser():
         return json.dumps({'message': 'User updated successfully :)'}), 200
     else:
         return json.dumps({'message': 'User not updated :( '}), 400
-    
+   
 @test.route('/v1/deleteUser', methods=['DELETE'])  
 @login_required     
 def deleteUser():
     user_id = request.headers.get('id')
     newUserHandler = UserHandler(dbname,uri, mongoClient)
     response = UserHandler.deleteUser(newUserHandler, user_id)
+    print(response['updated_count'])
     if response['updated_count'] > 0:
-        return json.dumps({'message': 'User deleted successfully :)'}), 204
+        return json.dumps({'message': 'User deleted successfully :)'}), 200
     else:
-        return json.dumps({'message': 'User not deleted :( '}), 404
+        return jsonify({'message': 'User not deleted or already deleted:( '}), 404
    
 
 
